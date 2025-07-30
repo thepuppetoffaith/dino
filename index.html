@@ -4,11 +4,23 @@
     <meta charset="UTF-8" />
     <title>MindAR AR Example</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- JS lokal -->
+    
+    <!-- A-Frame dan MindAR -->
     <script src="aframe.min.js"></script>
     <script src="mindar-image.prod.js"></script>
     <script src="mindar-image-aframe.prod.js"></script>
+    
+    <!-- Komponen gesture detector untuk interaksi sentuh -->
+    <script>
+      AFRAME.registerComponent("link-opener", {
+        schema: { url: { type: "string" } },
+        init: function () {
+          this.el.addEventListener("click", () => {
+            window.open(this.data.url, "_blank");
+          });
+        },
+      });
+    </script>
 
     <style>
       html,
@@ -20,19 +32,13 @@
         height: 100%;
       }
 
-      #ar-scene {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-      }
-
       #overlay-guide {
         position: absolute;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background-image: url('overlay-guide.png');
+        background-image: url("overlay-guide.png");
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
@@ -52,57 +58,52 @@
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: true"
     >
-      <!-- Cursor dan raycaster -->
-      <a-camera position="0 0 0" look-controls="enabled: false" cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-camera>
-
       <a-assets>
         <img id="display-image" src="image-display.jpg" />
       </a-assets>
 
+      <!-- Kamera + Raycaster -->
+      <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="objects: .clickable"></a-camera>
+
+      <!-- Target marker -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <!-- Gambar utama -->
-        <a-plane
-          src="#display-image"
-          position="0 0 0"
-          rotation="0 0 0"
-          width="1"
-          height="0.75"
-        ></a-plane>
+        <!-- Gambar -->
+        <a-plane src="#display-image" position="0 0 0" width="1" height="0.75"></a-plane>
 
         <!-- Tombol Instagram -->
         <a-plane
           class="clickable"
-          position="0 -0.5 0"
+          position="0 -0.5 0.01"
           width="0.6"
           height="0.15"
           color="#E1306C"
-          onclick="window.open('https://instagram.com/', '_blank')"
+          link-opener="url: https://instagram.com/"
         >
-          <a-text value="Instagram" align="center" color="white" width="1.5" position="0 0 0.01"></a-text>
+          <a-text value="Instagram" align="center" color="white" width="1.2" position="0 0 0.01"></a-text>
         </a-plane>
 
         <!-- Tombol Website -->
         <a-plane
           class="clickable"
-          position="0 -0.7 0"
+          position="0 -0.7 0.01"
           width="0.6"
           height="0.15"
           color="#3498db"
-          onclick="window.open('https://yourwebsite.com', '_blank')"
+          link-opener="url: https://yourwebsite.com"
         >
-          <a-text value="Website" align="center" color="white" width="1.5" position="0 0 0.01"></a-text>
+          <a-text value="Website" align="center" color="white" width="1.2" position="0 0 0.01"></a-text>
         </a-plane>
 
         <!-- Tombol Artist -->
         <a-plane
           class="clickable"
-          position="0 -0.9 0"
+          position="0 -0.9 0.01"
           width="0.6"
           height="0.15"
           color="#2ecc71"
-          onclick="window.open('https://linktr.ee/yourartist', '_blank')"
+          link-opener="url: https://linktr.ee/yourartist"
         >
-          <a-text value="Artist" align="center" color="white" width="1.5" position="0 0 0.01"></a-text>
+          <a-text value="Artist" align="center" color="white" width="1.2" position="0 0 0.01"></a-text>
         </a-plane>
       </a-entity>
     </a-scene>
